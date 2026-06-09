@@ -1,51 +1,18 @@
 {
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "target": "ES2022",
-    "lib": [
-      "ES2022",
-      "DOM",
-      "DOM.Iterable"
-    ],
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "jsx": "react-jsx",
-    "strict": true,
-    "noUncheckedIndexedAccess": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "allowImportingTsExtensions": false,
-    "allowJs": true,
+    "jsx": "preserve",
     "incremental": true,
-    "noEmit": true,
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
+    "plugins": [{ "name": "next" }],
     "paths": {
-      "@/*": [
-        "./*"
-      ]
+      "@open-design/artifacts": ["packages/artifacts/src/index.ts"],
+      "@open-design/components": ["packages/components/src/index.tsx"],
+      "@open-design/contracts": ["packages/contracts/src/index.ts"],
+      "@open-design/model-registry": ["packages/model-registry/src/index.ts"],
+      "@open-design/prompts": ["packages/prompts/src/index.ts"],
+      "@/*": ["apps/web/src/*"]
     }
   },
-  "include": [
-    "next-env.d.ts",
-    "next.config.ts",
-    "app/**/*",
-    "sidecar/**/*",
-    "src/**/*",
-    "tests/**/*",
-    ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts",
-    "out/types/**/*.ts",
-    "out/dev/types/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "out",
-    ".next"
-  ]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
 }

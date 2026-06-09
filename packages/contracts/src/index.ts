@@ -1,46 +1,119 @@
-export * from './common.js';
-export * from './errors.js';
-export * from './tasks.js';
-export * from './api/app-config.js';
-export * from './api/automations.js';
-export * from './api/artifacts.js';
-export * from './api/chat.js';
-export * from './api/community.js';
-export * from './api/context.js';
-export * from './api/connectors.js';
-export * from './api/comments.js';
-export * from './api/connectionTest.js';
-export * from './api/files.js';
-export * from './api/host-tools.js';
-export * from './api/finalize.js';
-export * from './api/github.js';
-export * from './api/handoff.js';
-export * from './api/live-artifacts.js';
-export * from './api/media.js';
-export * from './api/mcp.js';
-export * from './api/memory.js';
-export * from './api/orbit.js';
-export * from './api/plugin-candidates.js';
-export * from './api/providerModels.js';
-export * from './api/projects.js';
-export * from './api/proxy.js';
-export * from './api/routines.js';
-export * from './api/registry.js';
-export * from './api/research.js';
-export * from './api/social-share.js';
-export * from './api/terminals.js';
-export * from './api/version.js';
-export * from './examples.js';
-export * from './design-systems/components-manifest.js';
-export * from './design-systems/derived-token-outputs.js';
-export * from './design-systems/token-schema.js';
-export * from './sse/common.js';
-export * from './sse/chat.js';
-export * from './sse/proxy.js';
-export * from './prompts/system.js';
-export * from './prompts/plugin-block.js';
-export * from './prompts/atom-block.js';
-export * from './critique.js';
-export * from './plugins/index.js';
-export * from './analytics/events.js';
-export * from './analytics/public-params.js';
+export type ProviderKind =
+  | 'anthropic'
+  | 'openai'
+  | 'google'
+  | 'openai-compatible'
+  | 'vercel-gateway';
+
+export type ModelUseCase = 'idea' | 'draft' | 'final' | 'code' | 'image';
+export type CostTier = 'low' | 'medium' | 'high';
+export type RunStatus = 'queued' | 'running' | 'succeeded' | 'failed' | 'canceled';
+export type RunEventKind = 'text_delta' | 'artifact_delta' | 'artifact_complete' | 'status' | 'error' | 'usage';
+export type ArtifactKind = 'html';
+
+export type JsonValue =
+  | null
+  | boolean
+  | number
+  | string
+  | JsonValue[]
+  | { [key: string]: JsonValue };
+
+export interface ProjectMetadata {
+  kind?: 'landing-page' | 'email' | 'ad' | 'prototype' | 'other';
+  brief?: string;
+  audience?: string;
+  platformTargets?: string[];
+}
+
+export interface Project {
+  id: string;
+  orgId: string;
+  ownerUserId: string;
+  name: string;
+  designSystemId?: string;
+  metadata?: ProjectMetadata;
+  createdAt: number;
+  updatedAt: number;
+  archivedAt?: number;
+}
+
+export interface DesignSystem {
+  id: string;
+  orgId: string;
+  name: string;
+  description: string;
+  tokens?: Record<string, JsonValue>;
+  guidelines: string;
+  assets?: Array<{ label: string; url: string }>;
+  createdBy: string;
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface Conversation {
+  id: string;
+  orgId: string;
+  projectId: string;
+  title?: string;
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface ChatMessage {
+  id: string;
+  orgId: string;
+  projectId: string;
+  conversationId: string;
+  role: 'user' | 'assistant';
+  content: string;
+  modelProfileId?: string;
+  artifactIds: string[];
+  createdAt: number;
+}
+
+export interface ModelProfile {
+  id: string;
+  orgId: string;
+  providerSecretId: string;
+  modelId: string;
+  label: string;
+  useCase: ModelUseCase;
+  costTier: CostTier;
+  enabled: boolean;
+  isDefaultForUseCase: boolean;
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface MaskedProviderSecret {
+  id: string;
+  orgId: string;
+  provider: ProviderKind;
+  label: string;
+  baseUrl?: string;
+  apiKeyTail: string;
+  rotatedAt: number;
+  disabledAt?: number;
+}
+
+export interface ArtifactManifest {
+  version: 1;
+  kind: ArtifactKind;
+  title: string;
+  entry: string;
+  exports: Array<'html' | 'zip' | 'pdf'>;
+  createdAt: number;
+  updatedAt: number;
+  metadata?: Record<string, JsonValue>;
+}
+
+export interface RunEvent {
+  id: string;
+  orgId: string;
+  runId: string;
+  sequence: number;
+  kind: RunEventKind;
+  payload: Record<string, JsonValue>;
+  createdAt: number;
+}
